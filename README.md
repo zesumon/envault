@@ -50,6 +50,18 @@ Encrypt and share with a teammate using a passphrase:
 envault export myproject --passphrase "shared-secret"
 ```
 
+Import an environment shared by a teammate:
+
+```bash
+envault import myproject.vault --passphrase "shared-secret"
+```
+
+Delete a stored environment:
+
+```bash
+envault delete myproject
+```
+
 ---
 
 ## How It Works
