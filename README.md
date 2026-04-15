@@ -62,6 +62,12 @@ Delete a stored environment:
 envault delete myproject
 ```
 
+View the diff between your current `.env` and a stored environment:
+
+```bash
+envault diff myproject --env .env
+```
+
 ---
 
 ## How It Works
