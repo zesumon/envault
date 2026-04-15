@@ -45,6 +45,11 @@ def cmd_rotate(ctx: click.Context, profile: str, dry_run: bool) -> None:
         ctx.exit(1)
         return
 
+    if new_password == old_password:
+        click.echo("New password is the same as the current password. Aborting.", err=True)
+        ctx.exit(1)
+        return
+
     try:
         count = rotate_password(vault_path, old_password, new_password, profile=profile)
     except Exception as exc:  # noqa: BLE001
