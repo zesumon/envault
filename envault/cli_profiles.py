@@ -45,6 +45,10 @@ def cmd_profile_create(name):
 @click.option("--yes", is_flag=True, help="Skip confirmation prompt.")
 def cmd_profile_delete(name, yes):
     """Delete profile NAME and its stored secrets."""
+    if name == DEFAULT_PROFILE and not yes:
+        click.echo(
+            f"Warning: '{name}' is the default profile.", err=True
+        )
     if not yes:
         click.confirm(
             f"Delete profile '{name}' and all its secrets? This cannot be undone.",
