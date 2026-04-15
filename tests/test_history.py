@@ -58,6 +58,15 @@ def test_records_have_timestamp(vault_path: Path) -> None:
     assert "T" in rec["timestamp"]  # ISO format
 
 
+def test_records_are_ordered_oldest_first(vault_path: Path) -> None:
+    """Records for a key should be stored in insertion (chronological) order."""
+    for i in range(3):
+        record_change(vault_path, "TOKEN", "set", f"val{i}***")
+    records = get_key_history(vault_path, "TOKEN")
+    previews = [r["preview"] for r in records]
+    assert previews == ["val0***", "val1***", "val2***"]
+
+
 def test_all_keys_with_history_sorted(vault_path: Path) -> None:
     record_change(vault_path, "ZEBRA", "set", "z***")
     record_change(vault_path, "ALPHA", "set", "a***")
@@ -76,6 +85,17 @@ def test_clear_key_history_removes_entries(vault_path: Path) -> None:
     record_change(vault_path, "BAR", "set", "b***")
     clear_key_history(vault_path, "BAR")
     assert get_key_history(vault_path, "BAR") == []
+
+
+def test_clear_key_history_does_not_affect_other_keys(vault_path: Path) -> None:
+    """Clearing one key's history should leave other keys untouched."""
+    record_change(vault_path, "FOO", "set", "f***")
+    record_change(vault_path, "BAR", "set", "b***")
+    clear_key_history(vault_path, "FOO")
+    assert get_key_history(vault_path, "BAR") == [
+        {k: v for k, v in get_key_history(vault_path, "BAR")[0].items()}
+    ]
+    assert len(get_key_history(vault_path, "BAR")) == 1
 
 
 def test_clear_missing_key_returns_zero(vault_path: Path) -> None:
