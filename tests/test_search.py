@@ -57,6 +57,13 @@ def test_search_keys_no_match(vault_path):
     assert result == []
 
 
+def test_search_keys_wildcard_prefix_and_suffix(vault_path):
+    """Pattern with wildcards on both sides should match keys containing the substring."""
+    _make_vault(vault_path, {"DB_HOST": "localhost", "REDIS_HOST": "redis.local", "API_KEY": "secret"})
+    result = search_keys(PASSWORD, "*_HOST", vault_path=str(vault_path))
+    assert result == ["DB_HOST", "REDIS_HOST"]
+
+
 def test_search_values_finds_substring(vault_path):
     _make_vault(vault_path, {"DB_HOST": "localhost", "REDIS_HOST": "redis.local", "API_KEY": "abc123"})
     result = search_values(PASSWORD, "local", vault_path=str(vault_path))
