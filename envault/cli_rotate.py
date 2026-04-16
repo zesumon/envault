@@ -50,6 +50,10 @@ def cmd_rotate(ctx: click.Context, profile: str, dry_run: bool) -> None:
         ctx.exit(1)
         return
 
+    if not click.confirm(f"Rotate all secrets in profile '{profile}'?", default=False):
+        click.echo("Aborted.")
+        return
+
     try:
         count = rotate_password(vault_path, old_password, new_password, profile=profile)
     except Exception as exc:  # noqa: BLE001
