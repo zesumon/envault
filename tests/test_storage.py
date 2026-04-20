@@ -67,6 +67,11 @@ def test_list_keys_sorted(vault_path):
     assert list_keys(PASSWORD, vault_path) == ["ALPHA", "MIDDLE", "ZEBRA"]
 
 
+def test_list_keys_empty_vault(vault_path):
+    """list_keys on a fresh vault should return an empty list, not error out."""
+    assert list_keys(PASSWORD, vault_path) == []
+
+
 def test_wrong_password_raises_on_load(vault_path):
     save_vault({"K": "V"}, PASSWORD, vault_path)
     with pytest.raises(Exception):
